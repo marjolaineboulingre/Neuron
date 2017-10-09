@@ -7,11 +7,12 @@
 
 const int C = 1;
 const int tau = 20;
-const int h = 0.01;
+const double h = 0.1;
 const double Vth = 20;
 const double Vreset = 10;
 const double refractory_time = 2;
 const double I = 0;
+const double J = 1;
 
 using namespace std;
 
@@ -29,15 +30,16 @@ class Neuron {
 	
 		Neuron(double mp, int t); 
 		Neuron();
-		virtual ~Neuron() = default;
+		//virtual ~Neuron() = default;
 		
 		double getMembranePotential() const;
 		//double getNumberSpikes() const;	
-		//double getTimeSpikes() const;
+
+		void setMembranePotential(double mem_pot);
 		
-		double setMembranePotential(double mem_pot);
 		bool isSpiking() const;
 		bool isRefractory(double time) const;
+		double getLastSpike() const;
 		
 		void update(double current, double time);
 };

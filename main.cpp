@@ -38,6 +38,11 @@ int main() {
 		{
 			neuron.update(I, simulation_time);
 		}
+		
+		if (neuron.isSpiking()) {
+			cout << "Spikes at : " << neuron.getLastSpike() << endl;
+		}
+		
 		simulation_time += h;
 	}
 	return 0;

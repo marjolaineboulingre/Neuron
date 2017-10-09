@@ -18,12 +18,10 @@ double Neuron::getMembranePotential() const {
 	return number_spikes;
 }*/
 		
-/*double Neuron::getTimeSpikes() const {
-	return times_spikes;
-}*/
 		
-double Neuron::setMembranePotential(double mem_pot) {
+void Neuron::setMembranePotential(double mem_pot) {
 	membrane_potential = mem_pot;
+	
 }		
 	
 void Neuron::update(double current, double time)
@@ -32,7 +30,7 @@ void Neuron::update(double current, double time)
 	{
 		setMembranePotential(0);
 	} else {
-		setMembranePotential( exp(-h/tau)*membrane_potential + current*(tau/C)*(1-exp(-h/tau)));
+		setMembranePotential( exp(-h/tau)*membrane_potential + current*(tau/C)*(1-exp(-h/tau)) + J);
 		potential_historical.push_back(membrane_potential);
 		
 		if (isSpiking()) 
@@ -43,12 +41,19 @@ void Neuron::update(double current, double time)
 }
 
 bool Neuron::isSpiking() const {
-	if (getMembranePotential() >= Vth) 
-		 return true; 
+	return getMembranePotential() >= Vth;
+		 
 }
 
 bool Neuron::isRefractory(double time) const {
-	return (time - times_historical[times_historical.size()]) < refractory_time;
+	return !times_historical.empty() && (time - times_historical.back()) < refractory_time;
 }
 
-
+double Neuron::getLastSpike() const {
+	if ( !times_historical.empty())
+	 {
+		return times_historical.back();
+	} else {
+		return 0;
+	}
+}
