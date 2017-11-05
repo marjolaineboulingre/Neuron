@@ -1,49 +1,42 @@
-
+#include <cassert>
 #include <iostream>
+#include <fstream>
 #include "neuron.hpp"
+#include "network.hpp"
+#include "constants.hpp"
+
 using namespace std;
 
 
-
-
-int main() {
+int main(int argc, char* argv[]) 
+{
+	Network network;
+	unsigned int time_sim(0);
 	
-	double start_time(0);
-	double stop_time(0);
-	double Iext(0);
-	double a(0);
-	double b(0);
+	//network.run2neurons(time_sim);
+	//network.run(time_sim);
+	
+	//network.saveTimeSpikes();
+	
+	int progress(1);
+	int progress_rate(0.01*C::time_simulation);
 	
 	
-	cout << "How long do you want the simulation to last ?" << endl;
-	cin >> stop_time;
+	network.createNetwork();
+	network.createConnections();
 	
-	cout << "Which time interval do you want for the external current ? " << endl;
-	cin >> a;
-	cin >> b;
-	cout << "Which external current do you want for this interval? " << endl;
-	cin >> Iext;
-	
-	double simulation_time(start_time);
-	
-	Neuron neuron;
-	
-	while (simulation_time <= stop_time) 
+	while(time_sim < C::time_simulation) 
 	{
-		if ((simulation_time >= a) and (simulation_time < b)) 
+		if(time_sim > progress_rate) 
 		{
-			neuron.update(Iext, simulation_time);
+			cout << progress << "%" << endl;
+			progress += 1;
+			progress_rate += 0.01*C::time_simulation;
 		}
-		else
-		{
-			neuron.update(I, simulation_time);
-		}
-		
-		if (neuron.isSpiking()) {
-			cout << "Spikes at : " << neuron.getLastSpike() << endl;
-		}
-		
-		simulation_time += h;
+	
+	network.update(time_sim);
+	++time_sim; 
 	}
+	
 	return 0;
 }
